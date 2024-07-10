@@ -1,0 +1,56 @@
+# .NET Specific
+**/bin/
+**/obj/
+**/out/
+*.user
+*.suo
+*.userprefs
+*.sln.docstates
+*.userosscache
+*.nuget.targets
+*.csproj.user
+*.vbproj.user
+*.njsproj.user
+*.cache
+*.vs/
+*.vscode/
+global.json
+nuget.exe
+*.nupkg
+*.snupkg
+# Ignore the local symbol cache
+**/nuget-symbol-packages/
+
+# npm Specific
+**/node_modules/
+npm-debug.log
+npm-debug.log.*
+package-lock.json
+yarn-error.log
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+.gitattributes
+.gitmodules
+
+# GitLab
+.gitlab-ci.yml
+.gitlab/
+
+# Release
+release/
