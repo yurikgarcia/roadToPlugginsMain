@@ -1,0 +1,18 @@
+{
+  "name": "vue-dotnet-app",
+  "version": "1.0.0",
+  "description": "Your project description",
+  "main": "index.js",
+  "scripts": {
+    "build-dev-image": "docker build -f ./docker/development/Dockerfile -t dev/alpine-dev .",
+    "install-upgrade-dev": "helm upgrade -i dev ./helm/helm-k8s-app/ -f ./helm/helm-k8s-app/values-dev.yaml",
+    "serve-dev": "npm run build-dev-image && npm run install-upgrade-dev",
+    "uninstall-dev": "helm uninstall dev",
+    "build-prod-image": "docker build -f ./docker/Local.Dockerfile -t dev/helm-k8s-app .",
+    "install-upgrade-prod": "helm upgrade -i prod ./helm/helm-k8s-app/ -f ./helm/helm-k8s-app/values-prod.yaml",
+    "serve-prod": "npm run build-prod-image && npm run install-upgrade-prod",
+    "uninstall-prod": "helm uninstall prod"
+  },
+  "author": "",
+  "license": "ISC"
+}

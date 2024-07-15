@@ -1,0 +1,15 @@
+image:
+  registry: dev
+  repository: helm-k8s-app
+  pullPolicy: Never
+  tag: latest
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: localhost
+      paths:
+        - path: /
+          pathType: Prefix

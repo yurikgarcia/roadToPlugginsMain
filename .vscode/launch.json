@@ -1,43 +1,27 @@
 {
-    "compounds": [
-      {
-        "name": "Launch All",
-        "configurations": ["ViteJS: Watch", "C#: App.Backend", "ViteJS: Dev", "Launch Chrome"]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach to App.Backend (Kubernetes)",
+      "type": "coreclr",
+      "request": "attach",
+      "processName": "App.Backend",
+      "pipeTransport": {
+        "pipeProgram": "kubectl",
+        "pipeArgs": ["exec", "-i", "deploy/dev-helm-k8s-app", "--", "/bin/sh", "-c"],
+        "debuggerPath": "/root/vsdbg/vsdbg",
+        "pipeCwd": "${workspaceFolder}"
+      },
+      "sourceFileMap": {
+        "/projects/helm-k8s-app/backend/App.Backend": "${workspaceFolder}/backend/App.Backend"
       }
-    ],
-    "configurations": [
-      {
-        "name": ".NET Core Attach",
-        "type": "coreclr",
-        "request": "attach"
-      },
-      {
-        "name": "ViteJS: Watch",
-        "type": "node-terminal",
-        "request": "launch",
-        "command": "npm run watch",
-        "cwd": "${workspaceFolder}\\frontend"
-      },
-      {
-        "name": "C#: App.Backend",
-        "type": "dotnet",
-        "request": "launch",
-        "projectPath": "${workspaceFolder}\\backend\\App.Backend\\App.Backend.csproj",
-        "launchConfigurationId": "TargetFramework=;http",
-      },
-      {
-        "name": "ViteJS: Dev",
-        "type": "node-terminal",
-        "request": "launch",
-        "command": "npm run dev",
-        "cwd": "${workspaceFolder}\\frontend"
-      },
-      {
-        "name": "Launch Chrome",
-        "request": "launch",
-        "type": "chrome",
-        "url": "http://localhost:8080",
-        "webRoot": "${workspaceFolder}\\frontend"
-      }
-    ]
-  }
+    },
+    {
+      "name": "Launch Chrome for Frontend",
+      "request": "launch",
+      "type": "chrome",
+      "url": "http://dev.localhost",
+      "webRoot": "${workspaceFolder}/frontend"
+    }
+  ]
+}

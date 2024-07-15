@@ -1,0 +1,75 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Dev Image",
+      "type": "shell",
+      "command": "docker",
+      "args": ["build", "-f", "./docker/development/Dockerfile", "-t", "dev/alpine-dev", "."],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Install/Upgrade Dev",
+      "type": "shell",
+      "command": "helm",
+      "args": ["upgrade", "-i", "dev", "./helm/helm-k8s-app/", "-f", "./helm/helm-k8s-app/values-dev.yaml"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve Dev",
+      "dependsOrder": "sequence",
+      "dependsOn": ["Build Dev Image", "Install/Upgrade Dev"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Uninstall Dev",
+      "type": "shell",
+      "command": "helm",
+      "args": ["uninstall", "dev"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Production Image",
+      "type": "shell",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "command": "docker",
+      "args": ["build", "-f", "./docker/Local.Dockerfile", "-t", "dev/helm-k8s-app", "."],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Install/Upgrade Production",
+      "type": "shell",
+      "command": "helm",
+      "args": ["upgrade", "-i", "prod", "./helm/helm-k8s-app/", "-f", "./helm/helm-k8s-app/values-prod.yaml"],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve Production",
+      "dependsOrder": "sequence",
+      "dependsOn": ["Build Production Image", "Install/Upgrade Production"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Uninstall Production",
+      "type": "shell",
+      "command": "helm",
+      "args": ["uninstall", "prod"],
+      "problemMatcher": []
+    }
+  ]
+}
