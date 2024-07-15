@@ -9,6 +9,7 @@ export default defineConfig(({ command, mode }) => {
   return {
     plugins: [vue()],
     server: {
+      host: true,
       port: 8081, // Your frontend port
       proxy: {
         '/api': {

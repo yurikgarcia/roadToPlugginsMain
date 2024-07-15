@@ -28,10 +28,52 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+            {{- if .Values.development }}
+            - name: http-dev
+              containerPort: 8080
+              protocol: TCP
+            {{- end }}
+          {{- if .Values.development }}
+          workingDir: "/projects/{{ .Values.workingDir }}"
+          volumeMounts:
+            - name: "dev-volume"
+              mountPath: "/projects"
+            {{- range .Values.shadowMounts }}
+            {{- if .enabled }}
+            - name: "{{ .name }}-vol"
+              mountPath: {{ .path | quote }}
+            {{- end }}
+            {{- end }}
+          env:
+            {{- range .Values.env }}
+            - name: {{ .name | quote }}
+              value: {{ .value | quote }}
+            {{- end }}
+            {{- range .Values.envPaths }}
+            - name: {{ .name | quote }}
+              value: "/projects/{{ .value }}"
+            {{- end }}
+          {{- end }}
+          {{- if not .Values.development }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
+          {{- end }}
+      {{- if .Values.development }}
+      volumes:
+        - name: "dev-volume"
+          persistentVolumeClaim:
+            claimName: {{ .Values.devVolumeClaim | default "bcs-dev-vol-pvc" }}
+        {{- range .Values.shadowMounts }}
+        {{- if .enabled }}
+        - name: "{{ .name }}-vol"
+          emptyDir:
+            medium: {{ .medium | default "Memory" }}
+            sizeLimit: {{ .sizeLimit | default "100Mi" }}
+        {{- end }}
+        {{- end }}
+      {{- end }}
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}

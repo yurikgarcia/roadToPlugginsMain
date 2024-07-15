@@ -1,3 +1,27 @@
+{{/*
+Define the fullname template to be used throughout the chart
+*/}}
+{{- define "helm-k8s-app.fullname" -}}
+{{- printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Define the labels template to be used throughout the chart
+*/}}
+{{- define "helm-k8s-app.labels" -}}
+app.kubernetes.io/name: {{ include "helm-k8s-app.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/version: {{ .Chart.AppVersion }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
+
+{{/*
+Define the name template to be used throughout the chart
+*/}}
+{{- define "helm-k8s-app.name" -}}
+{{- .Chart.Name | replace "-" "." | replace "_" "." -}}
+{{- end -}}
+
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "helm-k8s-app.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
@@ -49,11 +73,11 @@ spec:
             backend:
               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
               service:
-                name: {{ $fullName }}
+                name: {{ print $fullName (empty .svc | ternary "" (print "-" .svc)) }}
                 port:
                   number: {{ $svcPort }}
               {{- else }}
-              serviceName: {{ $fullName }}
+              serviceName: {{ print $fullName (empty .svc | ternary "" (print "-" .svc)) }}
               servicePort: {{ $svcPort }}
               {{- end }}
           {{- end }}

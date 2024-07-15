@@ -1,0 +1,10 @@
+Update Service Bindings: Adjusting service bindings is crucial for ensuring that both backend and frontend services are accessible from the container, particularly in a development environment where services need to listen for requests from any IP address, not just localhost.
+
+Backend Update: For the backend service to accept requests from outside the container, update its binding configuration in appsettings.Development.json by setting the urls property to listen on all interfaces:
+
+"urls": "http://*:9001"
+Frontend Update: For the frontend, particularly when using Vite as the development server, modify the vite.config.ts file to include a host: true setting within the server configuration section. This ensures the Vite server binds to 0.0.0.0, allowing for external access:
+
+server: {
+  host: true
+}

@@ -1,0 +1,60 @@
+development: true
+
+# The persistent volume claim for development, correlating to the root directory containing all repos & workspaces.
+devVolumeClaim: bcs-dev-vol-pvc
+# The specific working directory of this repo.
+workingDir: helm-k8s-app
+
+# Array of environment variables who's value is a relative path to the repo's parent dir.
+envPaths:
+   - name: NUGET_PACKAGES
+     value: .nuget/packages
+   - name: NUGET_HTTP_CACHE_PATH
+     value: .nuget/cache
+   - name: NUGET_SCRATCH
+     value: .nuget/scratch
+   - name: NUGET_PLUGINS_CACHE_PATH
+     value: .nuget/plugins
+
+# Paths, relative to the repo root, of directories to setup as empty dirs.
+# This is to facilitate builds in Linux not interrupting the IDE in Windows.
+shadowMounts:
+   - name: backend-bin
+     enabled: true
+     path: backend/App.Backend/bin
+   - name: backend-obj
+     enabled: true
+     path: backend/App.Backend/obj
+   - name: test-bin
+     enabled: true
+     path: backend/App.Test/bin
+   - name: test-obj
+     enabled: true
+     path: backend/App.Test/obj
+   - name: sonar-bin
+     enabled: true
+     path: backend/Sonar/bin
+   - name: sonar-obj
+     enabled: true
+     path: backend/Sonar/obj
+
+image:
+  registry: "dev"
+  repository: alpine-dev
+  pullPolicy: Never
+  tag: latest
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: app.localhost
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: dev.localhost
+      paths:
+        - path: /
+          pathType: Prefix
+          svc: dev
