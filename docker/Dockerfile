@@ -19,7 +19,8 @@ RUN apk add -q --no-cache \
   libintl \
   libssl3 \
   libstdc++ \
-  zlib
+  zlib \
+  libgdiplus
 
 # .NET runtime
 RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && \
@@ -28,9 +29,10 @@ RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && \
   ln -s /usr/share/.dotnet/dotnet /usr/bin/dotnet && \
   rm dotnet-install.sh
 
-COPY release/ /app
+# Copy application files to /app
+COPY backend/App.Backend/publish/ /app
 
-# setup user
+# Setup user
 RUN addgroup --gid $GID $GROUPNAME && \
   adduser --ingroup $GROUPNAME --disabled-password --no-create-home --uid $UID $USERNAME && \
   chown root:root /usr/bin/dumb-init && \
